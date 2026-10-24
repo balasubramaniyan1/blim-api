@@ -1,8 +1,19 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/login",
-      "destination": "/api/login"
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/login",
+      "dest": "/api/login.js"
+    },
+    {
+      "src": "/.*",
+      "status": 404
     }
   ]
 }

@@ -1,9 +1,4 @@
-const demoUsers = [
-  { email: 'blimmet.demo@example.com', password: 'Blimmet123!' },
-  { email: 'hello@blimmet.test', password: 'Welcome123!' },
-  { email: 'test@test.com', password: 'test@123' },
-  { email: 'test1@test.com', password: 'test1234' },
-]
+const authenticate = require('../auth')
 
 module.exports = function login(request, response) {
   response.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL || '*')
@@ -16,18 +11,17 @@ module.exports = function login(request, response) {
 
   if (request.method !== 'POST') {
     response.setHeader('Allow', 'POST, OPTIONS')
-    return response.status(405).json({ message: 'Method not allowed.' })
+    return response.status(405).json({
+      success: false,
+      message: 'Method not allowed.',
+    })
   }
 
-  const { email, password } = request.body ?? {}
-  if (typeof email !== 'string' || typeof password !== 'string') {
-    return response.status(400).json(false)
-  }
+  const body = request.body ?? {}
+  const formData = typeof body === 'string' ? new URLSearchParams(body) : body
+  const email = formData instanceof URLSearchParams ? formData.get('email') : formData.email
+  const password = formData instanceof URLSearchParams ? formData.get('password') : formData.password
 
-  const normalizedEmail = email.trim().toLowerCase()
-  const isValidUser = demoUsers.some(
-    (user) => user.email === normalizedEmail && user.password === password,
-  )
-
-  return response.status(200).json(isValidUser)
+  const result = authenticate(email, password)
+  return response.status(result.status).json(result.body)
 }

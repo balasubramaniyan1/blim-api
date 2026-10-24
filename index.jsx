@@ -1,8 +1,7 @@
 const express = require('express')
 const cors = require("cors")
-
 const app = express()
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 
 app.use(cors())
 app.use(express.json())
@@ -17,6 +16,10 @@ const demoUsers = [
 
 app.post('/login', (request, response) => {
   const { email, password } = request.body ?? {}
+
+  if (typeof email !== 'string' || typeof password !== 'string') {
+    return response.status(400).json(false)
+  }
 
   const normalizedEmail = email.trim().toLowerCase()
   const user = demoUsers.find(

@@ -13,9 +13,10 @@ app.post('/login', (request, response) => {
   return response.status(result.status).json(result.body)
 })
 
-app.listen(PORT, () => {
-  console.log(`Demo login API listening at http://localhost:${PORT}`)
-})
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Demo login API listening at http://localhost:${PORT}`)
+  })
+}
 
-// CRITICAL: Export the app instance for Vercel
-module.exports = app;
+module.exports = app

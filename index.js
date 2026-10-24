@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000
 app.use(cors())
 app.use(express.json())
 
-app.post('/login', (request, response) => {
+app.post('/api/login', (request, response) => {
   const { email, password } = request.body ?? {}
   const result = authenticate(email, password)
   return response.status(result.status).json(result.body)
@@ -15,7 +15,7 @@ app.post('/login', (request, response) => {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Demo login API listening at http://localhost:${PORT}`)
+    console.log(`Demo login API listening at http://localhost:${PORT}/api/login`)
   })
 }
 
